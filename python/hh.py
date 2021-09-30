@@ -8,39 +8,39 @@ USD_to_RUR = 72.88
 EUR_to_RUR = 84.43
 #языки, что мы запрашиваем
 technologies = [
-  '1С',
-  'Assembler',
-  'C',
-  'C++',
-  'C#',
-  'Clojure',
-  'Cuda',
-  'Delphi',
-  'Erlang',
-  'Go',
-  'Groovy',
-  'Haskell',
+#   '1С',
+#   'Assembler',
+#   'C',
+#   'C++',
+#   'C#',
+#   'Clojure',
+#   'Cuda',
+#   'Delphi',
+#   'Erlang',
+#   'Go',
+#   'Groovy',
+#   'Haskell',
   'Java',
-  'JavaScript',
-  'Kotlin',
-  'Lisp',
-  'Lua',
-  'Matlab',
-  'Objective-C',
-  'OpenGL',
-  'Perl',
-  'PHP',
-  'Python',
-  'Ruby',
-  'Rust',
-  'Scala',
-  'Solidity',
-  'Swift',
-  'SQL',
-  'TypeScript',
-  'Verilog',
-  'VHDL',
-  'Visual Basic'
+#   'JavaScript',
+#   'Kotlin',
+#   'Lisp',
+#   'Lua',
+#   'Matlab',
+#   'Objective-C',
+#   'OpenGL',
+#   'Perl',
+#   'PHP',
+#   'Python',
+#   'Ruby',
+#   'Rust',
+#   'Scala',
+#   'Solidity',
+#   'Swift',
+#   'SQL',
+#   'TypeScript',
+#   'Verilog',
+#   'VHDL',
+#   'Visual Basic'
 ]
 # technologies = ['Assembler']
 #регионы
@@ -56,6 +56,7 @@ for technology in technologies:
   total_salary = 0
   number_of_vacancy = 0
   #цикл, который скачивает вакансии
+ 
   for i in range(200):
     area = areas.get('Moscow')
     # запрос
@@ -69,10 +70,15 @@ for technology in technologies:
     elementOfVacancyList = page.json()
     vacancyList.append(elementOfVacancyList)
     print("\rProcessing for %s: %d%%"%(technology, i / 2), end = '')
-  # print("\r     \r", end = '')
+    if   i % 3 == 0:
+      print(".  ", end = '')
+    elif i % 3 == 1:
+      print(".. ", end = '')
+    else:
+      print("...", end = '')
 
-  # #сохраняем в файл
-  f = open("./docs/%s.jsonc"%technology, "w+")
+  #сохраняем в файл
+  f = open("./docs/%s.jsonc"%technology, "w+", encoding='utf-8')
   for vacancyDict in vacancyList:
     for key, val in vacancyDict.items():
       f.write("%s : %s\n"%(key, val))
