@@ -17,7 +17,6 @@ technologies = [
   'Cuda',
   'Delphi',
   'Erlang',
-  'Fortran',
   'Go',
   'Groovy',
   'Haskell',
@@ -31,8 +30,6 @@ technologies = [
   'OpenGL',
   'Perl',
   'PHP',
-  'PL/SQL',
-  'Prolog',
   'Python',
   'Ruby',
   'Rust',
@@ -59,17 +56,19 @@ for technology in technologies:
   total_salary = 0
   number_of_vacancy = 0
   #цикл, который скачивает вакансии
-  print("\tProcessing for %s" %technology, end = '')
   for i in range(200):
     area = areas.get('Moscow')
     # запрос
     url = 'https://api.hh.ru/vacancies'
     #параметры, которые будут добавлены к запросу
     params = {'text': technology, 'area': area, 'per_page': '10', 'page': i}
-    answer = requests.get(url, params)
-    elementOfVacancyList = answer.json()
+    page = requests.get(url, params)
+    if page.status_code == 403:
+      print("\rHTTP 403 Forbidden\t\t\t\t")
+      quit()
+    elementOfVacancyList = page.json()
     vacancyList.append(elementOfVacancyList)
-    print("\r%d%%"%(i / 2), end = '')
+    print("\rProcessing for %s: %d%%"%(technology, i / 2), end = '')
   # print("\r     \r", end = '')
 
   # #сохраняем в файл
@@ -97,9 +96,9 @@ for technology in technologies:
         if salary['from'] != None and salary['to'] != None:
           # считаем количество обработанных вакансий в которых указана минимальная ЗП
           n += 1
-          #получаем минимальную  и максимальную ЗП по ключу from
-          salary['from']
-          salary['to']
+          # #получаем минимальную  и максимальную ЗП по ключу from
+          # salary['from']
+          # salary['to']
           #считаем сумму ЗП по вакансиям
           if salary['currency'] == 'USD':
             sum_zp += ((salary['from'] + salary['to']) / 2) * USD_to_RUR
@@ -115,7 +114,7 @@ for technology in technologies:
   if number_of_vacancy != 0:
     average_salary = total_salary / number_of_vacancy
     print("\rAfter processing %3d vacancies, I came to the conclusion that "
-          "the average salary of a %s developer is %s%.0f."%(number_of_vacancy, technology, RUR, average_salary))
+          "the average salary of a %12s developer is %s%6.0f"%(number_of_vacancy, technology, RUR, average_salary))
   else:
-    print("\rAfter processing %d vacancies, I came to the conclusion that "
-          "a %s developer has nothing to do."%(number_of_vacancy, technology))
+    print("\rAfter processing %3d vacancies, I came to the conclusion that "
+          "a %s developer has nothing to do"%(number_of_vacancy, technology))
