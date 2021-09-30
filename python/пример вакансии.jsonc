@@ -1,0 +1,73 @@
+{
+  // одинарные кавычки в заменены на двойные, чтобы не высвечивались ошибки
+  // значения переменных false и true в оригинале пишутся с большой буквы
+  "id": "47755907",
+  "premium": false,
+  "name": "Программист микроконтроллеров - схемотехник",
+  // "department": None,
+  "has_test": false,
+  "response_letter_required": false,
+  "area": {
+    "id": "1",
+    "name": "Москва",
+    "url": "https://api.hh.ru/areas/1"
+  },
+  "salary": {
+    "from": 120000,
+    "to": 200000,
+    "currency": "RUR",
+    "gross": true
+  },
+  "type": {
+    "id": "open",
+    "name": "Открытая"
+  },
+  "address": {
+    "city": "Москва",
+    "street": "Западный административный округ, Можайский район, Инновационный центр Сколково, Большой бульвар",
+    "building": "42с1",
+    // "description": None,
+    "lat": 55.692313,
+    "lng": 37.347476,
+    "raw": "Москва, Западный административный округ, Можайский район, Инновационный центр Сколково, Большой бульвар, 42с1",
+    // "metro": None,
+    "metro_stations": [],
+    "id": "4705969"
+  },
+  // "response_url": None,
+  // "sort_point_distance": None,
+  "published_at": "2021-09-29T11:53:40+0300",
+  "created_at": "2021-09-29T11:53:40+0300",
+  "archived": false,
+  "apply_alternate_url": "https://hh.ru/applicant/vacancy_response?vacancyId=47755907",
+  // "insider_interview": None,
+  "url": "https://api.hh.ru/vacancies/47755907?host=hh.ru",
+  "alternate_url": "https://hh.ru/vacancy/47755907",
+  "relations": [],
+  "employer": {
+    "id": "4438215",
+    "name": "МИГ",
+    "url": "https://api.hh.ru/employers/4438215",
+    "alternate_url": "https://hh.ru/employer/4438215",
+    "logo_urls": {
+      "240": "https://hhcdn.ru/employer-logo/3859628.png",
+      "90": "https://hhcdn.ru/employer-logo/3859627.png",
+      "original": "https://hhcdn.ru/employer-logo-original/854688.png"
+    },
+    "vacancies_url": "https://api.hh.ru/vacancies?employer_id=4438215",
+    "trusted": true
+  },
+  "snippet": {
+    "requirement": "Знание аналоговой и цифровой схемотехники. Знание языков программирования C, Python, <highlighttext>Assembler</highlighttext>. Знание микроконтроллеров ARM Cortex M0, М3, М...",
+    "responsibility": "Разработка электроники для лабораторного и испытательного оборудования, опытных образцов высокотехнологичных промышленных устройств, в частности: Разработка блок-схем/алгоритмов работы проектируемых..."
+  },
+  // "contacts": None,
+  "schedule": {
+    "id": "fullDay",
+    "name": "Полный день"
+  },
+  "working_days": [],
+  "working_time_intervals": [],
+  "working_time_modes": [],
+  "accept_temporary": true
+}

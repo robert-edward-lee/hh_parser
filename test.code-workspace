@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "bin": true,
+      ".vscode": true,
+      "*workspace": true,
+    },
+    "editor.detectIndentation": false,
+    "files.associations": {
+      "string.h": "c",
+      "pthread.h": "c",
+      "cstdlib": "cpp",
+      "stdio.h": "c",
+      "*.tcc": "c",
+      "limits.h": "c",
+      "climits": "c"
+    },
+  }
+}
