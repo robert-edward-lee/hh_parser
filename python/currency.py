@@ -1,35 +1,26 @@
 import requests
+import enum
 from bs4 import BeautifulSoup as bSoup
 
 
 # ссылки на страницы с текущими курсами валют
-USD_RUR = "https://www.google.com/search?q=%D0%B4%D0%BE%D0%BB%D0%BB%D0%B0%D1%80%20%D0%BA%20%D1%80%D1%83%D0%B1%D0%BB%D1%8E"
-EUR_RUR = "https://www.google.com/search?q=%D0%B5%D0%B2%D1%80%D0%BE%20%D0%BA%20%D1%80%D1%83%D0%B1%D0%BB%D1%8E"
+url_invest = "https://ru.investing.com/currencies/"
 # Заголовки для передачи вместе с URL
-headers = {
-  'User-Agent':
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'
+main_header = {
+  "User-Agent":
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.99 Safari/537.36"
 }
 # получение текущего курса доллара
-def get_usd_price():
+def get_currency_price(currency):
+  url = url_invest + currency + "-rub"
   # парсим всю страницу
-  page = requests.get(USD_RUR, headers = headers)
+  pageObj = requests.get(url, headers = main_header)
   # проверяем что сервер отвечает
-  if page.status_code == 403:
-    print("Cannot get actual currency: HTTP 403 Forbidden")
+  if pageObj.status_code < 200 or pageObj.status_code > 299:
+    print("Unable to get the current dollar rate! HTTP response code: %d"%pageObj.status_code)
     quit()
   # разбираем через BeautifulShop
-  soup = bSoup(page.content, 'html.parser')
+  soup = bSoup(pageObj.content, "html.parser")
   # Находим нужное значение и возвращаем его
-  text = soup.findAll("span", {"class": "DFlfde SwHCTb", "data-precision": 2})
-  return float(text[0].text.replace(",", "."))
-
-# получение текущего курса евро
-def get_eur_price():
-  # парсим всю страницу
-  page = requests.get(EUR_RUR, headers = headers)
-  # разбираем через BeautifulShop
-  soup = bSoup(page.content, 'html.parser')
-  # Находим нужное значение и возвращаем его
-  text = soup.findAll("span", {"class": "DFlfde SwHCTb", "data-precision": 2})
+  text = soup.findAll("span", {"id": "last_last"})
   return float(text[0].text.replace(",", "."))
