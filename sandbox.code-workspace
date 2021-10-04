@@ -23,7 +23,7 @@
     "editor.suggestSelection": "first",
     "editor.tabSize": 2,
     "editor.wordWrap": "bounded",
-    "editor.wordWrapColumn": 120,
+    "editor.wordWrapColumn": 140,
     "editor.fontFamily": "'PT Mono', 'Droid Sans Mono', 'monospace', 'Droid Sans Fallback'",
     "diffEditor.ignoreTrimWhitespace": true,
     "diffEditor.renderIndicators": true,
