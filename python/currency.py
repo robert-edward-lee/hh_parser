@@ -10,13 +10,13 @@ main_header = {
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.99 Safari/537.36"
 }
 # получение текущего курса доллара
-def get_currency_price(currency):
+def get_currency_price(currency) -> float:
   url = url_invest + currency + "-rub"
   # парсим всю страницу
   pageObj = requests.get(url, headers = main_header)
   # проверяем что сервер отвечает
   if pageObj.status_code < 200 or pageObj.status_code > 299:
-    print("Unable to get the current dollar rate! HTTP response code: %d"%pageObj.status_code)
+    print("Unable to get the current %s rate! HTTP response code: %d"%(currency, pageObj.status_code))
     quit()
   # разбираем через BeautifulShop
   soup = bSoup(pageObj.content, "html.parser")
