@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as bSoup
 
-
 # ссылки на страницы с текущими курсами валют
 url_invest = "https://ru.investing.com/currencies/"
 # Заголовки для передачи вместе с URL

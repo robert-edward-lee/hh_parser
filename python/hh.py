@@ -9,10 +9,6 @@ import currency
 
 # словарь с данными по вакансиям
 vacancyList = []
-# общая сумма средних зарплат по вакансиям
-average_salary = 0
-# количество вакансий
-number_of_vacancies = 0
 # символы валют
 RUR = "\u20bd"
 USD = "\u0024"
@@ -65,8 +61,9 @@ areas = {
 data_for_xls = {
   "Language"        : [],
   "Vacancy"         : [],
-  "Average Salary"  : [],
   "Floor Salary"    : [],
+  "Average Salary"  : [],
+  "Ceiling Salary"  : [],
   # условный коэффициент
   "Power"           : []
 }
@@ -122,12 +119,20 @@ def setSavingFlag() -> bool:
 
 # функция вычисления средней ЗП и количество вакансий
 def getSalaryAndVacancies(vacancyList):
-  total_average_salary = 0
+  # общее сумма минимальных и максимальных ЗП
   total_floor_salary = 0
-  number_of_average_salaries = 0
+  total_ceiling_salary = 0
+  # число вакансий содержащих минимальные и максимальные ЗП
   number_of_floor_salaries = 0
+  number_of_ceiling_salaries = 0
+  # возвращаемые значения: средняя максимальная ЗП, средняя минимальная ЗП, общее число вакансий на рынке (не более 2000)
+  ret_ceiling_salary = 0
+  ret_floor_salary = 0
+  ret_number_of_vacancies = 0
   # цикл, перебора по списку vacancyList, содержащий ответы на запросы к hh.ru
   for vacancy in vacancyList:
+    # считаем общее число вакансий
+    ret_number_of_vacancies += 1
     # проверяем есть ли значения в словаре по ключу salary. Т.е проверяем есть ли в вакансии данные по зарплате
     if vacancy["salary"] != None:
       # записываем значение в переменную salary
@@ -143,27 +148,23 @@ def getSalaryAndVacancies(vacancyList):
           total_floor_salary += salary["from"] * EUR_to_RUR
         else:
           total_floor_salary += salary["from"]
-        # проверяем есть ли значения по ключу to. Т.е проверяем есть ли в вакансии данные по максимальной зп
-        if salary["to"] != None:
-          # считаем количество обработанных вакансий в которых указана минимальная и максимальная ЗП
-          number_of_average_salaries += 1
-          # считаем сумму средней ЗП по вакансиям в зависимости от валюты
-          if salary["currency"] == "USD":
-            total_average_salary += ((salary["from"] + salary["to"]) / 2) * USD_to_RUR
-          elif salary["currency"] == "EUR":
-            total_average_salary += ((salary["from"] + salary["to"]) / 2) * EUR_to_RUR
-          else:
-            total_average_salary += (salary["from"] + salary["to"]) / 2
+      # проверяем есть ли значения по ключу to. Т.е проверяем есть ли в вакансии данные по максимальной зп
+      if salary["to"] != None:
+        # считаем количество обработанных вакансий в которых указана минимальная и максимальная ЗП
+        number_of_ceiling_salaries += 1
+        # считаем сумму средней ЗП по вакансиям в зависимости от валюты
+        if salary["currency"] == "USD":
+          total_ceiling_salary += salary["to"] * USD_to_RUR
+        elif salary["currency"] == "EUR":
+          total_ceiling_salary += salary["to"] * EUR_to_RUR
+        else:
+          total_ceiling_salary += salary["to"]
   # считаем средние арифметические значения, если это возможно
-  if number_of_average_salaries != 0:
-    ret_average_salary = total_average_salary / number_of_average_salaries
-  else:
-    ret_average_salary = 0
+  if number_of_ceiling_salaries != 0:
+    ret_ceiling_salary = total_ceiling_salary / number_of_ceiling_salaries
   if number_of_floor_salaries != 0:
     ret_floor_salary = total_floor_salary / number_of_floor_salaries
-  else:
-    ret_floor_salary = 0
-  return int(ret_average_salary), int(ret_floor_salary), number_of_floor_salaries,
+  return int(ret_ceiling_salary), int(ret_floor_salary), ret_number_of_vacancies,
 
 #
 def getDataForExcel(salary, number, keyword):
@@ -187,7 +188,7 @@ def getDataFromJson(name) -> list:
   with open("./docs/%s.jsonc"%name) as file:
     file_contens = file.read()
   data = json.loads(file_contens)
-  # костыль! удаляю последний элемент, т.е. он пусть подробности см. в saveDataToJson()
+  # костыль! удаляю последний элемент, т.к. он пуст (подробности см. в saveDataToJson())
   data.pop()
   return data
 
@@ -199,8 +200,8 @@ flag_saving = setSavingFlag()
 # цикл, перебора вакансий по списку ключевых слов
 for technology in technologies:
   vacancyList.clear()
-  average_salary = 0
   floor_salary = 0
+  ceiling_salary = 0
   number_of_vacancies = 0
   if flag_saving == True:
     # получение данных по ключевому слову в вакансии и по локации работодателя
@@ -210,18 +211,19 @@ for technology in technologies:
   # загрузка с json
   vacancyList = getDataFromJson(technology)
   # вычисление средней ЗП и количество вакансий
-  average_salary, floor_salary, number_of_vacancies = getSalaryAndVacancies(vacancyList)
-  # считаем среднюю ЗП, если это возможно, и заполняем данные для передачи в эксельку
+  ceiling_salary, floor_salary, number_of_vacancies = getSalaryAndVacancies(vacancyList)
+  # считаем среднюю ЗП, и заполняем данные для передачи в эксельку
   data_for_xls["Language"].append(technology)
   data_for_xls["Vacancy"].append(number_of_vacancies)
-  data_for_xls["Average Salary"].append(average_salary)
   data_for_xls["Floor Salary"].append(floor_salary)
-  # условный коэффициент,
+  data_for_xls["Average Salary"].append(int((floor_salary + ceiling_salary) / 2))
+  data_for_xls["Ceiling Salary"].append(ceiling_salary)
+  # условный коэффициент
   data_for_xls["Power"].append(floor_salary * number_of_vacancies / 1000000)
   if number_of_vacancies != 0:
     print("\rAfter processing %4d vacancies, I came to the conclusion that "
-          "the average salary of a/an %12s developer is %s%6.0f, "
-          "and floor salary is %s%6.0f"%(number_of_vacancies, technology, RUR, average_salary, RUR, floor_salary))
+          "the salary of a/an %11s developer is from %s%6d, to %s%6d"
+          %(number_of_vacancies, technology, RUR, floor_salary, RUR, ceiling_salary))
   else:
     print("\rAfter processing %4d vacancies, I came to the conclusion that "
           "a/an %s developer has nothing to do"%(number_of_vacancies, technology))
