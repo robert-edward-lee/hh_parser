@@ -118,7 +118,7 @@ def setSavingFlag() -> bool:
   return ret
 
 # функция вычисления средней ЗП и количество вакансий
-def getSalaryAndVacancies(vacancyList):
+def getSalaryAndVacancies(vacancyList) -> tuple:
   # общее сумма минимальных и максимальных ЗП
   total_floor_salary = 0
   total_ceiling_salary = 0
