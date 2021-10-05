@@ -3,9 +3,12 @@ import requests
 import pandas
 import sys
 import json
+import os
 from datetime import datetime
 # импорт модулей
-import currency
+from currency import Currency
+from hh_constants_api import Areas
+import hh_constants_api
 
 # словарь с данными по вакансиям
 vacancyList = []
@@ -13,6 +16,7 @@ vacancyList = []
 RUR = "\u20bd"
 USD = "\u0024"
 EUR = "\u20ac"
+
 # языки, что мы запрашиваем в качестве ключевых слов
 technologies = [
   "1С",
@@ -48,15 +52,7 @@ technologies = [
   "TypeScript",
   "Verilog"
 ]
-# регионы с номерами согласно API hh.ru
-areas = {
-  "Moscow"              : 1,
-  "Sankt-Petersburg"    : 2,
-  "Voronezh"            : 26,
-  "Russia"              : 113,
-  "Moskovskaya oblast'" : 2019,
-  "Krasnogorsk"         : 2034
-}
+
 # данные для передачи в эксельку
 data_for_xls = {
   "Language"        : [],
@@ -71,15 +67,13 @@ data_for_xls = {
 def getDataFromHh(key_word, area) -> list:
   # словарь с данными по вакансиям
   retVacancyList = []
-  # запрос
-  url = 'https://api.hh.ru/vacancies'
   # параметры, которые будут добавлены к запросу
   page = 0
   params = {'text': key_word, 'area': area, 'per_page': '100', 'page': page}
   # цикл, который скачивает вакансии
   for page in range(20):
     params['page'] = page
-    pageObj = requests.get(url, params)
+    pageObj = requests.get(hh_constants_api.url, params)
     # проверяем что сервер отвечает
     if pageObj.status_code < 200 or pageObj.status_code > 299:
       print("Cannot get actual currency! HTTP response code: %d"%pageObj.status_code)
@@ -87,7 +81,8 @@ def getDataFromHh(key_word, area) -> list:
     elementOfVacancyList = pageObj.json()
     if not elementOfVacancyList['items']:
       break
-    retVacancyList.append(elementOfVacancyList)
+    for item in elementOfVacancyList["items"]:
+      retVacancyList.append(item)
     # моднявое ожидание загрузки
     procents = page * 5
     print("\rGetting data for %s: %d%%"%(key_word, procents), end = '')
@@ -174,27 +169,25 @@ def getDataForExcel(salary, number, keyword):
 # функция сохранения вакансий в файл json
 def saveDataToJson(pages, name) -> None:
   with open("./docs/%s.jsonc"%name, "w+", encoding = "utf-8") as file:
-    file.write("[")
-    for page in pages:
-      for item in page["items"]:
-        file.write("%s,"%(json.dumps(item, indent = 2, ensure_ascii = False)))
-    # костыль! не могу удалить последнюю запятую и поэтому в конец файла записываю пустой элемент
-    file.write("{ }]")
+    file.write("%s,"%(json.dumps(pages, indent = 2, ensure_ascii = False)))
+    # опять ебучий костыль! нужно удалить последний символ, там запятая есть
+    file.seek(0, os.SEEK_END)
+    size = file.tell()
+    file.truncate(size - 1)
   return
 
 # функция обрабатывающая вакансии уже сохраненные файлы
 def getDataFromJson(name) -> list:
   data = []
-  with open("./docs/%s.jsonc"%name) as file:
+  with open("./docs/%s.jsonc"%name, encoding = "utf-8") as file:
     file_contens = file.read()
   data = json.loads(file_contens)
-  # костыль! удаляю последний элемент, т.к. он пуст (подробности см. в saveDataToJson())
-  data.pop()
   return data
 
 # текущий курс валют
-USD_to_RUR = currency.get_currency_price("usd")
-EUR_to_RUR = currency.get_currency_price("eur")
+currentRate = Currency()
+USD_to_RUR = currentRate.usd
+EUR_to_RUR = currentRate.eur
 print("Actual currency price: %s%.4f, %s%.4f"%(USD, USD_to_RUR, EUR, EUR_to_RUR))
 flag_saving = setSavingFlag()
 # цикл, перебора вакансий по списку ключевых слов
@@ -205,7 +198,7 @@ for technology in technologies:
   number_of_vacancies = 0
   if flag_saving == True:
     # получение данных по ключевому слову в вакансии и по локации работодателя
-    vacancyList = getDataFromHh(technology, areas["Moscow"])
+    vacancyList = getDataFromHh(technology, Areas.MOSCOW.key)
     # сохранение в json созданный список с вакансиями
     saveDataToJson(vacancyList, technology)
   # загрузка с json
@@ -220,13 +213,13 @@ for technology in technologies:
   data_for_xls["Ceiling Salary"].append(ceiling_salary)
   # условный коэффициент
   data_for_xls["Power"].append(floor_salary * number_of_vacancies / 1000000)
+  print("\rAfter processing %4d vacancies in %s, I came to the conclusion that "
+      %(number_of_vacancies, Areas.MOSCOW.designation), end='')
   if number_of_vacancies != 0:
-    print("\rAfter processing %4d vacancies, I came to the conclusion that "
-          "the salary of a/an %11s developer is from %s%6d, to %s%6d"
-          %(number_of_vacancies, technology, RUR, floor_salary, RUR, ceiling_salary))
+    print("the salary of a/an %11s developer is from %s%6d, to %s%6d"
+        %(technology, RUR, floor_salary, RUR, ceiling_salary))
   else:
-    print("\rAfter processing %4d vacancies, I came to the conclusion that "
-          "a/an %s developer has nothing to do"%(number_of_vacancies, technology))
+    print("a/an %s developer has nothing to do"%(technology))
 # получение текущей даты
 date = datetime.now()
 # сохранение данных в эксельку
