@@ -3,7 +3,6 @@ import requests
 import pandas
 import sys
 import json
-import os
 from datetime import datetime
 # импорт модулей
 from currency import Currency
@@ -63,6 +62,7 @@ data_for_xls = {
   # условный коэффициент
   "Power"           : []
 }
+
 # функция получения данных по ключевому слову в вакансии и по локации работодателя
 def getDataFromHh(key_word, area) -> list:
   # словарь с данными по вакансиям
@@ -161,23 +161,21 @@ def getSalaryAndVacancies(vacancyList) -> tuple:
     ret_floor_salary = total_floor_salary / number_of_floor_salaries
   return int(ret_ceiling_salary), int(ret_floor_salary), ret_number_of_vacancies,
 
-#
+
 def getDataForExcel(salary, number, keyword):
 
   return
 
-# функция сохранения вакансий в файл json
+
 def saveDataToJson(pages, name) -> None:
+  """Функция сохранения вакансии в файл json"""
   with open("./docs/%s.jsonc"%name, "w+", encoding = "utf-8") as file:
-    file.write("%s,"%(json.dumps(pages, indent = 2, ensure_ascii = False)))
-    # опять ебучий костыль! нужно удалить последний символ, там запятая есть
-    file.seek(0, os.SEEK_END)
-    size = file.tell()
-    file.truncate(size - 1)
+    file.write(json.dumps(pages, indent = 2, ensure_ascii = False))
   return
 
-# функция обрабатывающая вакансии уже сохраненные файлы
+
 def getDataFromJson(name) -> list:
+  """Функция читающая вакансии из уже сохраненного файла"""
   data = []
   with open("./docs/%s.jsonc"%name, encoding = "utf-8") as file:
     file_contens = file.read()

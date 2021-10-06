@@ -2,3 +2,5 @@
 *~$*
 /rust/target
 /python/docs
+*.exe
+/python/docklight

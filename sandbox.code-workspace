@@ -6,7 +6,7 @@
     }
   ],
   "settings": {
-    "files.autoSave": "off",
+    // "files.autoSave": "off",
     "files.trimTrailingWhitespace": true,
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     /* Параметры вертикальных линий */
@@ -58,6 +58,23 @@
     "debug.onTaskErrors": "showErrors",
     "explorer.confirmDelete": true,
     "workbench.activityBar.visible": true,
+
+    /* Python */
+    "python.languageServer": "Pylance",
+    "python.linting.enabled": true,
+    // "python.linting.flake8Enabled": true,
+    // "python.linting.flake8Path": "flake8",
+    "python.linting.pylintEnabled": false,
+    "python.linting.pycodestyleEnabled": false,
+    "python.autoComplete.addBrackets": true,
+    "python.autoComplete.showAdvancedMembers": true,
+    "python.autoComplete.extraPaths": [
+      "${workspaceFolder}/python"
+    ],
+    "python.analysis.extraPaths": [
+      "${workspaceFolder}/python"
+    ],
+    "python.analysis.completeFunctionParens": true,
 
     /* Doxygen */
     "doxdocgen.c.commentPrefix": "  ",
