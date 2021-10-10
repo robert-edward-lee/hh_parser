@@ -4,3 +4,4 @@
 /python/docs
 *.exe
 /python/docklight
+/.vscode
