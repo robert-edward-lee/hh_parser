@@ -17,9 +17,9 @@ class Areas(Enum):
     MOSCOW_OBLAST = ('Moskovskaya oblast', 2019)
     RED_MOUNTAIN = ('Krasnogorsk', 2034)
 
-    def __init__(self, _title, _key) -> None:
-        self._title = _title
-        self._key = _key
+    def __init__(self, title, key) -> None:
+        self._title = title
+        self._key = key
 
     @property
     def title(self) -> str:

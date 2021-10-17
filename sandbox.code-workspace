@@ -26,7 +26,7 @@
     "editor.wordWrapColumn": 140,
     "editor.fontFamily": "'PT Mono', 'Droid Sans Mono', 'Droid Sans Fallback'",
     "terminal.integrated.fontFamily": "'Space Mono'",
-    "terminal.integrated.fontSize": 15,
+    "terminal.integrated.fontSize": 14,
     "diffEditor.ignoreTrimWhitespace": true,
     "diffEditor.renderIndicators": true,
     "diffEditor.renderSideBySide": true,
@@ -100,6 +100,7 @@
     /* Выделение ключевых слов */
     "todohighlight.isEnable": true,
     "todohighlight.isCaseSensitive": true,
+    "todohighlight.keywordsPattern": "TODO:|FIXME:|Костыль|костыль|КОСТЫЛЬ|ВАЖНО|highlighttext",
     "todohighlight.keywords": [
       {
         "text": "TODO",
@@ -107,9 +108,16 @@
         "border": "1px solid red",
         "borderRadius": "2px", //NOTE: using borderRadius along with `border` or you will see nothing change
         "backgroundColor": "rgba(0,0,0,.2)"
-        //other styling properties goes here ...
       }
     ],
-    "todohighlight.keywordsPattern": "TODO|FIXME|Костыль|костыль|КОСТЫЛЬ|ВАЖНО",
+    "todohighlight.defaultStyle": {
+        "color": "red",
+        "backgroundColor": "#ffab00",
+        "overviewRulerColor": "#ffab00",
+        "cursor": "pointer",
+        "border": "1px solid #eee",
+        "borderRadius": "2px",
+        "isWholeLine": false,
+    },
   }
 }

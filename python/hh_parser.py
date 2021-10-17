@@ -1,4 +1,4 @@
-from statistics import median
+from statistics import StatisticsError, median
 
 from currency import Currency
 
@@ -19,8 +19,14 @@ class HhParser(object):
         self._number_of_vacancies = len(vacancies_list)
 
         self._get_salary()
-        self._floor_salary = int(median(self._list_floor_salary))
-        self._ceiling_salary = int(median(self._list_ceiling_salary))
+        try:
+            self._floor_salary = int(median(self._list_floor_salary))
+        except StatisticsError:
+            self._floor_salary = 0
+        try:
+            self._ceiling_salary = int(median(self._list_ceiling_salary))
+        except StatisticsError:
+            self._ceiling_salary = 0
         self._average_salary = (self._floor_salary + self._ceiling_salary) // 2
 
     @property
