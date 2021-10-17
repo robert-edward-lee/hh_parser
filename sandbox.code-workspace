@@ -24,9 +24,9 @@
     "editor.tabSize": 4,
     "editor.wordWrap": "bounded",
     "editor.wordWrapColumn": 140,
-    "editor.fontFamily": "'PT Mono', 'Droid Sans Mono', 'monospace', 'Droid Sans Fallback'",
-    "terminal.integrated.fontFamily": "monospace",
-    "terminal.integrated.fontSize": 16,
+    "editor.fontFamily": "'PT Mono', 'Droid Sans Mono', 'Droid Sans Fallback'",
+    "terminal.integrated.fontFamily": "'Space Mono'",
+    "terminal.integrated.fontSize": 15,
     "diffEditor.ignoreTrimWhitespace": true,
     "diffEditor.renderIndicators": true,
     "diffEditor.renderSideBySide": true,
@@ -52,10 +52,12 @@
         "моднявое",
         "эксельку",
         "Cuda",
+        "KHTML",
         "Krasnogorsk",
         "Moskovskaya",
         "Sankt",
         "struct",
+        "todohighlight",
         "Verilog",
         "VHDL"
     ],
@@ -108,6 +110,6 @@
         //other styling properties goes here ...
       }
     ],
-    "todohighlight.keywordsPattern": "TODO|FIXME|Костыль|костыль|КОСТЫЛЬ",
+    "todohighlight.keywordsPattern": "TODO|FIXME|Костыль|костыль|КОСТЫЛЬ|ВАЖНО",
   }
 }
