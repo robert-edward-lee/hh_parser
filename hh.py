@@ -64,7 +64,8 @@ data_for_xls = {
 class Manager(object):
 
     def __init__(self) -> None:
-        self._currency = Currency()
+        self._currency = Currency('rub')
+        print(self._currency)
         self._set_saving_flag()
 
         # словарь с данными по вакансиям

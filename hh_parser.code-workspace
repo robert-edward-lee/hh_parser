@@ -24,17 +24,9 @@
     "editor.tabSize": 4,
     "editor.wordWrap": "bounded",
     "editor.wordWrapColumn": 140,
-    "editor.fontFamily": "'PT Mono', 'Droid Sans Mono', 'Droid Sans Fallback'",
-    "terminal.integrated.fontFamily": "'Space Mono'",
-    "terminal.integrated.fontSize": 14,
     "diffEditor.ignoreTrimWhitespace": true,
     "diffEditor.renderIndicators": true,
     "diffEditor.renderSideBySide": true,
-    "files.exclude": {
-      "bin": true,
-      ".vscode": true,
-      "*workspace": true,
-    },
     "editor.detectIndentation": false,
     "files.associations": {
       "string.h": "c",

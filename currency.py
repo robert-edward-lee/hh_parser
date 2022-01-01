@@ -1,12 +1,12 @@
 import requests
 from bs4 import BeautifulSoup as bSoup
 
-# символы валют
+# символы валют в юникоде
+EUR = '\u20ac'
 RUR = '\u20bd'
 USD = '\u0024'
-EUR = '\u20ac'
 
-# Заголовки для передачи вместе с URL
+# заголовки для передачи вместе с URL
 main_header = {
     'User-Agent': (
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -16,37 +16,46 @@ main_header = {
 
 
 class Currency(object):
-    """Класс для получения текущего курса валют, в частности доллара и евро."""
+    """Класс для получения текущего курса валют. На вход передаётся название валюты, в цене которой формируются цены
+    остальных валют
 
-    def __init__(self) -> None:
-        self._usd = self._get_currency_price('usd')
-        self._eur = self._get_currency_price('eur')
+    Поддерживаемые валюты:
+            'eur', 'rub', 'usd'
+    """
 
-        print(
-            'Actual currency price: {0}{1:.4f}, {2}{3:.4f}'.format(
-                USD,
-                self._usd,
-                EUR,
-                self.eur,
-            ),
-        )
+    _currencies = {
+        'eur': {'symbol': EUR, 'price': 0.0},
+        'rub': {'symbol': RUR, 'price': 0.0},
+        'usd': {'symbol': USD, 'price': 0.0},
+    }
 
-    @property
-    def usd(self) -> float:
-        return self._usd
+    def __init__(self, base_currency: str) -> None:
+        self._base_currency = base_currency
 
-    @property
-    def eur(self) -> float:
-        return self._eur
+        for currency in self._currencies:
+            if currency != self._base_currency:
+                self._currencies[currency]['price'] = self._get_currency_price(currency)
+                setattr(self, currency, lambda: self._currencies[currency]['price'])
 
-    # получение текущего курса доллара
-    def _get_currency_price(self, currency) -> float:
-        url = 'https://ru.investing.com/currencies/{0}-rub'.format(currency)
+    # получение текущего курса
+    def _get_currency_price(self, currency: str) -> float:
+        url = 'https://ru.investing.com/currencies/{0}-{1}'.format(currency, self._base_currency)
         # парсим всю страницу
         page_obj = requests.get(url, headers=main_header)
         page_obj.raise_for_status()
         # разбираем через BeautifulShop
         soup = bSoup(page_obj.content, 'html.parser')
-        # Находим нужное значение и возвращаем его
-        text = soup.findAll('span', {'id': 'last_last'})
+        # находим нужное значение и возвращаем его
+        text = soup.findAll('span', {'data-test': 'instrument-price-last'})
         return float(text[0].text.replace(',', '.'))
+
+    def __str__(self) -> str:
+        ret_str = 'Actual currency price:'
+        for currency in self._currencies:
+            if currency != self._base_currency:
+                ret_str += '\n\t{0}1 = {1}{2:.4f}'.format(
+                    self._currencies[currency]['symbol'],
+                    self._currencies[self._base_currency]['symbol'],
+                    self._currencies[currency]['price'],
+                )
+        return ret_str

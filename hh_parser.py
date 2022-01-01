@@ -87,4 +87,6 @@ class HhParser(object):
             ret_salary = salary * self._current_rate.eur
         elif currency == 'RUR':
             ret_salary = salary
+        else:
+            raise ValueError('Unknown currency: {0}'.format(currency))
         return ret_salary
