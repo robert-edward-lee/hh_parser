@@ -4,12 +4,11 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from currency import Currency
+from currency import Currency, RUB
 from disk_io import JsonJob, XlsJob
 from hh_parser import HhParser
 from hh_request import Areas, HhRequest
 
-RUR = '\u20bd'
 
 # технологии, что мы запрашиваем в качестве ключевых слов
 technologies = [
@@ -124,14 +123,14 @@ class Manager(object):
                 print(
                     'the salary of a/an {0:>11} developer is from {1}{2:>6}, to {3}{4:>6}'.format(
                         technology,
-                        RUR,
+                        RUB,
                         analyzed_vacancies.floor_salary,
-                        RUR,
+                        RUB,
                         analyzed_vacancies.ceiling_salary,
                     ),
                 )
             # необязательная задержка, чтобы не нагружать сервисы hh
-            time.sleep(0.25)
+            time.sleep(1 / 4)
 
         XlsJob.save_data_to_xls(data_for_xls)
         Graph(data_for_xls)

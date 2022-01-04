@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup as bSoup
 
 # символы валют в юникоде
 EUR = '\u20ac'
-RUR = '\u20bd'
+RUB = '\u20bd'
+UAH = '\u20b4'
 USD = '\u0024'
 
 # заголовки для передачи вместе с URL
@@ -20,22 +21,35 @@ class Currency(object):
     остальных валют
 
     Поддерживаемые валюты:
-            'eur', 'rub', 'usd'
+            'eur', 'rub', 'uah', 'usd'
     """
 
     _currencies = {
-        'eur': {'symbol': EUR, 'price': 0.0},
-        'rub': {'symbol': RUR, 'price': 0.0},
-        'usd': {'symbol': USD, 'price': 0.0},
+        'eur': {'symbol': EUR, 'price': 1},
+        'rub': {'symbol': RUB, 'price': 1},
+        'uah': {'symbol': UAH, 'price': 1},
+        'usd': {'symbol': USD, 'price': 1},
     }
 
     def __init__(self, base_currency: str) -> None:
         self._base_currency = base_currency
 
         for currency in self._currencies:
+            setattr(self, currency, lambda: self._currencies[currency]['price'])
             if currency != self._base_currency:
                 self._currencies[currency]['price'] = self._get_currency_price(currency)
-                setattr(self, currency, lambda: self._currencies[currency]['price'])
+
+
+    def __str__(self) -> str:
+        ret_str = 'Actual currency price:'
+        for currency in self._currencies:
+            if currency != self._base_currency:
+                ret_str += '\n\t{0}1 = {1}{2:.4f}'.format(
+                    self._currencies[currency]['symbol'],
+                    self._currencies[self._base_currency]['symbol'],
+                    self._currencies[currency]['price'],
+                )
+        return ret_str
 
     # получение текущего курса
     def _get_currency_price(self, currency: str) -> float:
@@ -49,13 +63,8 @@ class Currency(object):
         text = soup.findAll('span', {'data-test': 'instrument-price-last'})
         return float(text[0].text.replace(',', '.'))
 
-    def __str__(self) -> str:
-        ret_str = 'Actual currency price:'
-        for currency in self._currencies:
-            if currency != self._base_currency:
-                ret_str += '\n\t{0}1 = {1}{2:.4f}'.format(
-                    self._currencies[currency]['symbol'],
-                    self._currencies[self._base_currency]['symbol'],
-                    self._currencies[currency]['price'],
-                )
-        return ret_str
+    def get_current_value(self, currency: str) -> float:
+        try:
+            return self._currencies[currency]['price']
+        except KeyError:
+            raise ValueError('Unknown currency: {0}'.format(currency))

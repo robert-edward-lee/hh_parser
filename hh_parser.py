@@ -81,12 +81,8 @@ class HhParser(object):
     # получение ЗП в местной валюте (рублях)
     def _get_local_salary(self, salary, currency) -> int:
         ret_salary = 0
-        if currency == 'USD':
-            ret_salary = salary * self._current_rate.usd
-        elif currency == 'EUR':
-            ret_salary = salary * self._current_rate.eur
-        elif currency == 'RUR':
+        if currency == 'RUR':
             ret_salary = salary
         else:
-            raise ValueError('Unknown currency: {0}'.format(currency))
+            ret_salary = salary * self._current_rate.get_current_value(currency.lower())
         return ret_salary
