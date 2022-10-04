@@ -1,14 +1,13 @@
 import sys
 import time
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from currency import Currency, RUB
+from currency import RUB, Currency
 from disk_io import JsonJob, XlsJob
 from hh_parser import HhParser
 from hh_request import Areas, HhRequest
-
+from matplotlib import pyplot as plt
 
 # технологии, что мы запрашиваем в качестве ключевых слов
 technologies = [

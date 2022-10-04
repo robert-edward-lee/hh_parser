@@ -6,6 +6,7 @@ EUR = '\u20ac'
 RUB = '\u20bd'
 UAH = '\u20b4'
 USD = '\u0024'
+KZT = '\u20B8'
 
 # заголовки для передачи вместе с URL
 main_header = {
@@ -21,7 +22,7 @@ class Currency(object):
     остальных валют
 
     Поддерживаемые валюты:
-            'eur', 'rub', 'uah', 'usd'
+            'eur', 'rub', 'uah', 'usd', 'kzt'
     """
 
     _currencies = {
@@ -29,6 +30,7 @@ class Currency(object):
         'rub': {'symbol': RUB, 'price': 1},
         'uah': {'symbol': UAH, 'price': 1},
         'usd': {'symbol': USD, 'price': 1},
+        'kzt': {'symbol': KZT, 'price': 1},
     }
 
     def __init__(self, base_currency: str) -> None:
@@ -60,8 +62,8 @@ class Currency(object):
         # разбираем через BeautifulShop
         soup = bSoup(page_obj.content, 'html.parser')
         # находим нужное значение и возвращаем его
-        text = soup.findAll('span', {'data-test': 'instrument-price-last'})
-        return float(text[0].text.replace(',', '.'))
+        text = soup.findAll('span', {'data-test': 'instrument-price-last'})[0].text
+        return float(text.replace(',', '.'))
 
     def get_current_value(self, currency: str) -> float:
         try:
