@@ -58,7 +58,7 @@ class HhParser(object):
     # функция проверки поля salary вакансии
     def _salary_analysis(self, salary: dict) -> None:
         # проверяем есть ли значения в словаре по ключу salary, т.е проверяем есть ли в вакансии данные по зарплате
-        if salary is not None:
+        if salary is not None and salary['from'] is not None and salary['to'] is not None:
             # проверяем есть ли значения по ключу from, т.е проверяем есть ли в вакансии данные по минимальной зп
             if salary['from'] is not None:
                 # считаем сумму минимальной ЗП по вакансиям в зависимости от валюты
