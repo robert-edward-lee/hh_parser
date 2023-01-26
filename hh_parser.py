@@ -57,26 +57,24 @@ class HhParser(object):
 
     # функция проверки поля salary вакансии
     def _salary_analysis(self, salary: dict) -> None:
-        # проверяем есть ли значения в словаре по ключу salary, т.е проверяем есть ли в вакансии данные по зарплате
-        if salary is not None and salary['from'] is not None and salary['to'] is not None:
-            # проверяем есть ли значения по ключу from, т.е проверяем есть ли в вакансии данные по минимальной зп
-            if salary['from'] is not None:
-                # считаем сумму минимальной ЗП по вакансиям в зависимости от валюты
-                self._list_floor_salary.append(
-                    self._get_local_salary(
-                        salary=salary['from'],
-                        currency=salary['currency'],
-                    ),
-                )
-            # проверяем есть ли значения по ключу to, т.е проверяем есть ли в вакансии данные по максимальной зп
-            if salary['to'] is not None:
-                # считаем сумму средней ЗП по вакансиям в зависимости от валюты
-                self._list_ceiling_salary.append(
-                    self._get_local_salary(
-                        salary=salary['to'],
-                        currency=salary['currency'],
-                    ),
-                )
+        # проверяем есть ли в вакансии данные по минимальной зп
+        if salary['from'] is not None:
+            # считаем сумму минимальной ЗП по вакансиям в зависимости от валюты
+            self._list_floor_salary.append(
+                self._get_local_salary(
+                    salary=salary['from'],
+                    currency=salary['currency'],
+                ),
+            )
+        # проверяем есть ли в вакансии данные по максимальной зп
+        if salary['to'] is not None:
+            # считаем сумму средней ЗП по вакансиям в зависимости от валюты
+            self._list_ceiling_salary.append(
+                self._get_local_salary(
+                    salary=salary['to'],
+                    currency=salary['currency'],
+                ),
+            )
 
     # получение ЗП в местной валюте (рублях)
     def _get_local_salary(self, salary, currency) -> int:

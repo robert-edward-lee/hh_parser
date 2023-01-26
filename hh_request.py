@@ -40,6 +40,7 @@ class HhRequest(object):
             'area': self._area.key,
             'per_page': str(VACANCIES_PER_PAGE),
             'page': 0,
+            'only_with_salary': True,
         }
         self._vacancy_list = self._get_data_from_hh()
 
