@@ -2,11 +2,12 @@ import mureq
 from bs4 import BeautifulSoup as bSoup
 
 # символы валют в юникоде
+AZN = '\u20BC'
 EUR = '\u20ac'
+KZT = '\u20B8'
 RUB = '\u20bd'
 UAH = '\u20b4'
 USD = '\u0024'
-KZT = '\u20B8'
 
 # заголовки для передачи вместе с URL
 main_header = {
@@ -22,7 +23,7 @@ class Currency(object):
     остальных валют
 
     Поддерживаемые валюты:
-            'eur', 'rub', 'uah', 'usd', 'kzt'
+            'eur', 'rub', 'uah', 'usd', 'kzt', 'azt
     """
 
     _currencies = {
@@ -31,6 +32,7 @@ class Currency(object):
         'uah': {'symbol': UAH, 'price': 1},
         'usd': {'symbol': USD, 'price': 1},
         'kzt': {'symbol': KZT, 'price': 1},
+        'azn': {'symbol': AZN, 'price': 1},
     }
 
     def __init__(self, base_currency: str) -> None:
@@ -40,7 +42,6 @@ class Currency(object):
             setattr(self, currency, lambda: self._currencies[currency]['price'])
             if currency != self._base_currency:
                 self._currencies[currency]['price'] = self._get_currency_price(currency)
-
 
     def __str__(self) -> str:
         ret_str = 'Actual currency price:'
