@@ -8,6 +8,7 @@ KZT = '\u20B8'
 RUB = '\u20bd'
 UAH = '\u20b4'
 USD = '\u0024'
+BYN = 'Br'
 
 # заголовки для передачи вместе с URL
 main_header = {
@@ -33,6 +34,7 @@ class Currency(object):
         'usd': {'symbol': USD, 'price': 1},
         'kzt': {'symbol': KZT, 'price': 1},
         'azn': {'symbol': AZN, 'price': 1},
+        'byn': {'symbol': BYN, 'price': 1},
     }
 
     def __init__(self, base_currency: str) -> None:

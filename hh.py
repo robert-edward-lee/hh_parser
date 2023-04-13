@@ -69,7 +69,7 @@ class Manager(object):
         # словарь с данными по вакансиям
         self._vacancies = []
 
-        self._main()
+        self._main(Areas.MOSCOW)
 
     # выбор режима работы: запрос с сайта или с уже скачанных файлов
     def _set_saving_flag(self) -> None:
@@ -87,13 +87,13 @@ class Manager(object):
     def _create_data_for_excel(salary, number, keyword):
         pass
 
-    def _main(self):
+    def _main(self, area: Areas):
         # цикл, перебора вакансий по списку ключевых слов
         for technology in technologies:
             self._vacancies.clear()
             if self._saving_flag is True:
                 # получение данных по ключевому слову в вакансии и по локации работодателя
-                self._vacancies = HhRequest(technology, Areas.MOSCOW).vacancies
+                self._vacancies = HhRequest(technology, area).vacancies
                 # сохранение в json созданный список с вакансиями
                 JsonJob.save_data_to_json(self._vacancies, technology)
             else:
@@ -112,7 +112,7 @@ class Manager(object):
             print(
                 '\rAfter processing {0:>4} vacancies in {1}, I came to the conclusion that '.format(
                     analyzed_vacancies.number_of_vacancies,
-                    Areas.MOSCOW.title,
+                    area.title,
                 ),
                 end='',
             )

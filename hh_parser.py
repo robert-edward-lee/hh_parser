@@ -83,6 +83,8 @@ class HhParser(object):
         ret_salary = 0
         if currency == 'RUR':
             ret_salary = salary
+        elif currency == 'BYR':
+            ret_salary = salary * self._current_rate.get_current_value('byn')
         else:
             ret_salary = salary * self._current_rate.get_current_value(currency.lower())
         return ret_salary
