@@ -1,4 +1,5 @@
 from enum import Enum
+from time import sleep
 
 import requests as rq
 
@@ -67,6 +68,7 @@ class HhRequest(object):
                 ret_vacancy_list.append(vacancy)
                 # моднявое ожидание загрузки
                 self._progress_bar()
+            sleep(0.5)
         return ret_vacancy_list
 
     # моднявое ожидание загрузки
