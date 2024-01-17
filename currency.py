@@ -24,7 +24,7 @@ class Currency(object):
     остальных валют
 
     Поддерживаемые валюты:
-            'eur', 'rub', 'uah', 'usd', 'kzt', 'azt
+            `eur`, `rub`, `uah`, `usd`, `kzt`, `azt`
     """
 
     _currencies = {
@@ -65,7 +65,7 @@ class Currency(object):
         # разбираем через BeautifulShop
         soup = bSoup(page_obj.content, 'html.parser')
         # находим нужное значение и возвращаем его
-        text = soup.findAll('span', {'data-test': 'instrument-price-last'})[0].text
+        text = soup.findAll(attrs={'data-test': 'instrument-price-last'})[0].text
         return float(text.replace(',', '.'))
 
     def get_current_value(self, currency: str) -> float:
