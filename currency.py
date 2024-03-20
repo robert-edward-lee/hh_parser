@@ -1,4 +1,4 @@
-import mureq
+import requests as rq
 from bs4 import BeautifulSoup as bSoup
 
 # символы валют в юникоде
@@ -60,7 +60,7 @@ class Currency(object):
     def _get_currency_price(self, currency: str) -> float:
         url = 'https://ru.investing.com/currencies/{0}-{1}'.format(currency, self._base_currency)
         # парсим всю страницу
-        page_obj = mureq.get(url, headers=main_header)
+        page_obj = rq.get(url, headers=main_header)
         page_obj.raise_for_status()
         # разбираем через BeautifulShop
         soup = bSoup(page_obj.content, 'html.parser')
