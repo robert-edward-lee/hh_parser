@@ -1,4 +1,4 @@
-import requests as rq
+import httpx
 from bs4 import BeautifulSoup as bSoup
 
 # символы валют в юникоде
@@ -9,15 +9,6 @@ RUB = '\u20bd'
 UAH = '\u20b4'
 USD = '\u0024'
 BYN = 'Br'
-
-# заголовки для передачи вместе с URL
-main_header = {
-    'User-Agent': (
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-        + 'Chrome/93.0.4577.99 Safari/537.36'
-    ),
-}
-
 
 class Currency(object):
     """Класс для получения текущего курса валют. На вход передаётся название валюты, в цене которой формируются цены
@@ -60,12 +51,12 @@ class Currency(object):
     def _get_currency_price(self, currency: str) -> float:
         url = 'https://ru.investing.com/currencies/{0}-{1}'.format(currency, self._base_currency)
         # парсим всю страницу
-        page_obj = rq.get(url, headers=main_header)
+        page_obj = httpx.get(url)
         page_obj.raise_for_status()
         # разбираем через BeautifulShop
         soup = bSoup(page_obj.content, 'html.parser')
         # находим нужное значение и возвращаем его
-        text = soup.findAll(attrs={'data-test': 'instrument-price-last'})[0].text
+        text = soup.find_all(attrs={'data-test': 'instrument-price-last'})[0].text
         return float(text.replace(',', '.'))
 
     def get_current_value(self, currency: str) -> float:

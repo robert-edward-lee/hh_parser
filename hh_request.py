@@ -58,7 +58,7 @@ class HhRequest(object):
             # попытка получить ответ
             page_obj = rq.get(URL, self._request_params)
             page_obj.raise_for_status()
-            # преобразование в словарь методом json()
+            # преобразование в словарь
             element_of_vacancy_list = page_obj.json()
             # проверка на наличие вакансий
             if not element_of_vacancy_list['items']:
